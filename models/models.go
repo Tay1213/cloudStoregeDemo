@@ -26,6 +26,7 @@ func Setup() {
 	if err != nil {
 		fmt.Printf("数据库连接出错了！: %#v", err)
 	}
+	fmt.Println("bbb")
 
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
