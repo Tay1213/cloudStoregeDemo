@@ -1,0 +1,33 @@
+definitions:
+  app.ResultData:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /user/login:
+    post:
+      parameters:
+      - description: username, email, hashedAuthenticationKey
+        in: body
+        name: user
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.ResultData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.ResultData'
+      summary: login
+swagger: "2.0"

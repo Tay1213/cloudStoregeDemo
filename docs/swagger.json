@@ -1,0 +1,54 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/user/login": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "login",
+                "parameters": [
+                    {
+                        "description": "username, email, hashedAuthenticationKey",
+                        "name": "user",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "app.ResultData": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "msg": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
