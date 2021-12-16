@@ -24,7 +24,7 @@ func Setup() {
 		setting.DatabaseSetting.Host,
 		setting.DatabaseSetting.Name))
 	if err != nil {
-		fmt.Printf("数据库连接出错了: %#v", err)
+		fmt.Printf("数据库连接出错了！: %#v", err)
 	}
 
 	db.DB().SetMaxIdleConns(10)
