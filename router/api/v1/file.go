@@ -15,10 +15,13 @@ type File struct {
 	ID           int    `json:"id"`
 	ParentDictId int    `json:"parent_dict_id"`
 	FileName     string `json:"file_name"`
-	FileType     string `json:"file_type"`
-	FileSize     int    `json:"file_size"`
-	PageNum      int    `json:"page_num"`
-	PageSize     int    `json:"page_size"`
+	EncryptedKey string `json:"encrypted_key"`
+	FileContent  string `json:"file_content"`
+
+	FileType string `json:"file_type"`
+	FileSize int    `json:"file_size"`
+	PageNum  int    `json:"page_num"`
+	PageSize int    `json:"page_size"`
 }
 
 func AddFile(c *gin.Context) {
@@ -34,16 +37,20 @@ func AddFile(c *gin.Context) {
 	fileService := file_service.File{
 		ParentDictId: file.ParentDictId,
 		FileName:     file.FileName,
+		EncryptedKey: file.EncryptedKey,
+		FileContent:  file.FileContent,
 		FileType:     file.FileType,
 		FileSize:     file.FileSize,
 	}
 
-	err := fileService.Add()
+	id, err := fileService.Add()
 	if err != nil {
 		appG.Respond(http.StatusOK, e.ERROR, err.Error())
 		return
 	}
-	appG.Respond(http.StatusOK, e.SUCCESS, nil)
+	appG.Respond(http.StatusOK, e.SUCCESS, map[string]interface{}{
+		"id": id,
+	})
 }
 
 func GetFiles(c *gin.Context) {
@@ -90,13 +97,16 @@ func GetFile(c *gin.Context) {
 	fileService := file_service.File{
 		ID: id,
 	}
-	f, err := fileService.Get()
+	f, content, err := fileService.Get()
 	if err != nil {
 		appG.Respond(http.StatusOK, e.ERROR, err.Error())
 		return
 	}
 
-	appG.Respond(http.StatusOK, e.SUCCESS, f)
+	appG.Respond(http.StatusOK, e.SUCCESS, map[string]interface{}{
+		"file_msg":     f,
+		"file_content": content,
+	})
 }
 
 func UpdateFile(c *gin.Context) {

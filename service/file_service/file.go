@@ -7,6 +7,8 @@ type File struct {
 	ID           int
 	ParentDictId int
 	FileName     string
+	EncryptedKey string
+	FileContent  string
 	FileType     string
 	FileSize     int
 
@@ -14,16 +16,18 @@ type File struct {
 	PageNum  int
 }
 
-func (f *File) Add() error {
+func (f *File) Add() (int, error) {
 	return models.AddFile(map[string]interface{}{
 		"ParentDictId": f.ParentDictId,
 		"FileName":     f.FileName,
+		"EncryptedKey": f.EncryptedKey,
+		"FileContent":  f.FileContent,
 		"FileType":     f.FileType,
 		"FileSize":     f.FileSize,
 	})
 }
 
-func (f *File) Get() (*models.FileSystem, error) {
+func (f *File) Get() (*models.FileSystem, string, error) {
 	return models.GetFile(f.ID)
 }
 

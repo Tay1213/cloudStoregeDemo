@@ -4,6 +4,7 @@ import (
 	"cloudStoregeDemo/models"
 	"cloudStoregeDemo/pkg/app"
 	"cloudStoregeDemo/pkg/e"
+	"cloudStoregeDemo/pkg/util"
 	"cloudStoregeDemo/service/file_service"
 	"cloudStoregeDemo/service/user_service"
 	"github.com/gin-gonic/gin"
@@ -82,7 +83,11 @@ func GetUserByName(c *gin.Context) {
 
 	user, err := userService.GetUserByName()
 	if err != nil {
-		appG.Respond(http.StatusOK, e.USER_NOT_FOUND, nil)
+		//appG.Respond(http.StatusOK, e.USER_NOT_FOUND, nil)
+		//return
+		appG.Respond(http.StatusOK, e.SUCCESS, map[string]interface{}{
+			"client_random_value": util.RandStringBytesMaskImprSrc1(32),
+		})
 		return
 	}
 
@@ -100,8 +105,11 @@ func GetUserByEmail(c *gin.Context) {
 
 	user, err := userService.GetUserByEmail()
 	if err != nil {
-		appG.Respond(http.StatusOK, e.EMAIL_NOT_FOUND, nil)
-		return
+		//appG.Respond(http.StatusOK, e.EMAIL_NOT_FOUND, nil)
+		//return
+		appG.Respond(http.StatusOK, e.SUCCESS, map[string]interface{}{
+			"client_random_value": util.RandStringBytesMaskImprSrc1(32),
+		})
 	}
 
 	appG.Respond(http.StatusOK, e.SUCCESS, map[string]interface{}{
