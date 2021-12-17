@@ -116,7 +116,7 @@ func GetFile(id int) (*FileSystem, string, error) {
 	f, err := os.Open(fileUrl)
 	defer f.Close()
 	if err != nil {
-		return nil, "", errors.New("文件打开失败")
+		return nil, "", errors.New("文件打开失败！")
 	}
 	fd, err := ioutil.ReadAll(f)
 	if err != nil {
