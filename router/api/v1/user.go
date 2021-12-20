@@ -7,6 +7,7 @@ import (
 	"cloudStoregeDemo/pkg/util"
 	"cloudStoregeDemo/service/file_service"
 	"cloudStoregeDemo/service/user_service"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -36,14 +37,15 @@ func Login(c *gin.Context) {
 		appG.Respond(httpCode, errCode, nil)
 		return
 	}
+	fmt.Println(user)
 	userService := user_service.User{
 		Username:                user.Username,
 		Email:                   user.Email,
 		HashedAuthenticationKey: user.HashedAuthenticationKey,
 	}
-	success, err := userService.Login()
-	if err != nil {
-		appG.Respond(http.StatusOK, 501, nil)
+	success, token, err := userService.Login()
+	if err != nil || !success {
+		appG.RespondMsg(http.StatusOK, e.ERROR, err.Error(), nil)
 		return
 	}
 	var u = &models.User{}
@@ -57,21 +59,27 @@ func Login(c *gin.Context) {
 		PageNum:  0,
 		PageSize: 10,
 	}
-
 	total, err := fileService.Count()
-
 	files, err := fileService.GetAll()
 	if err != nil {
-		appG.Respond(http.StatusOK, 501, nil)
+		appG.Respond(http.StatusOK, e.ERROR, nil)
 		return
 	}
 
 	appG.Respond(http.StatusOK, e.SUCCESS, map[string]interface{}{
-		"login":        success,
-		"root_dict_id": u.RootDictId,
-		"total":        total,
-		"files":        files,
+		"id":                   u.Id,
+		"login":                success,
+		"token":                "Bearer " + token,
+		"root_dict_id":         u.RootDictId,
+		"encrypted_master_key": u.EncryptedMasterKey,
+		"total":                total,
+		"files":                files,
 	})
+}
+
+func Logout(c *gin.Context) {
+	appG := app.Gin{C: c}
+	appG.Respond(http.StatusOK, e.SUCCESS, nil)
 }
 
 func GetUserByName(c *gin.Context) {

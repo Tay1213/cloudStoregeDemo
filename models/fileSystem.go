@@ -1,17 +1,14 @@
 package models
 
 import (
-	"cloudStoregeDemo/pkg/app"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"os"
-	"strconv"
 	"time"
 )
 
 type FileSystem struct {
 	Id           int `json:"id"`
+	UserId       int
 	ParentDictId int
 	FileName     string
 	EncryptedKey string
@@ -51,17 +48,6 @@ func AddFile(m map[string]interface{}) (int, error) {
 		return 0, errors.New("保存失败")
 	}
 
-	if m["FileType"] == "-" {
-		fileUrl := app.FILE_SAVE_ROOT + strconv.Itoa(file.Id) + ".txt"
-		f, err := os.Create(fileUrl)
-		if err != nil {
-			return 0, errors.New("文件创建失败")
-		}
-		_, err = f.WriteString(m["FileContent"].(string))
-		if err != nil {
-			return 0, errors.New("文件写入失败")
-		}
-	}
 	return file.Id, nil
 }
 
@@ -97,34 +83,34 @@ func DeleteFile(id int) error {
 	return db.Where("id = ?", id).Delete(&FileSystem{}).Error
 }
 
-func GetFiles(id, pageSize, pageNum int) ([]*FileSystem, error) {
+func GetFiles(id, userId, pageSize, pageNum int) ([]*FileSystem, error) {
 	var files []*FileSystem
-	err := db.Where("parent_dict_id = ?", id).Offset(pageNum).Limit(pageSize).Find(&files).Error
+	err := db.Where("parent_dict_id = ? and user_id = ?", id, userId).Offset(pageNum).Limit(pageSize).Find(&files).Error
 	if err != nil {
 		return nil, err
 	}
 	return files, nil
 }
 
-func GetFile(id int) (*FileSystem, string, error) {
+func GetFile(id, userId int) (*FileSystem, error) {
 	var file FileSystem
-	err := db.Where("id = ?", id).Find(&file).Error
+	err := db.Where("id = ? and user_id = ?", id, userId).Find(&file).Error
 	if err != nil {
-		return nil, "nil", err
+		return nil, err
 	}
-	fileUrl := app.FILE_SAVE_ROOT + strconv.Itoa(id) + ".txt"
-	f, err := os.Open(fileUrl)
-	defer f.Close()
-	if err != nil {
-		return nil, "", errors.New("文件打开失败！")
-	}
-	fd, err := ioutil.ReadAll(f)
-	if err != nil {
-		return nil, "", errors.New("文件读取失败")
-	}
-	content := string(fd)
-	fmt.Println("content: ", content)
-	return &file, content, nil
+	//fileUrl := constant.FILE_SAVE_ROOT + strconv.Itoa(id) + ".txt"
+	//f, err := os.Open(fileUrl)
+	//defer f.Close()
+	//if err != nil {
+	//	return nil, "", errors.New("文件打开失败！")
+	//}
+	//fd, err := ioutil.ReadAll(f)
+	//if err != nil {
+	//	return nil, "", errors.New("文件读取失败")
+	//}
+	//content := string(fd)
+	//fmt.Println("content: ", content)
+	return &file, nil
 }
 
 func GetFilesNum(id int) (int, error) {

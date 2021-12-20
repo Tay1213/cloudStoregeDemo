@@ -44,10 +44,20 @@ func Validate(m map[string]interface{}) (bool, error) {
 	}
 }
 
-func Login(m map[string]interface{}) error {
-	return db.Model(&User{}).
+func Login(m map[string]interface{}) (*User, error) {
+	var user = &User{}
+	var err error
+	err = db.Where("hashed_authentication_key = ?", m["HashedAuthenticationKey"]).Find(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	err = db.Model(&User{}).
 		Where("hashed_authentication_key = ?", m["HashedAuthenticationKey"]).
 		Update("logins", gorm.Expr("logins+1")).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, err
 }
 
 func GetUserByName(username string) (*User, error) {

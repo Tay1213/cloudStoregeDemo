@@ -3,10 +3,14 @@ package v1
 import (
 	"cloudStoregeDemo/models"
 	"cloudStoregeDemo/pkg/app"
+	"cloudStoregeDemo/pkg/constant"
 	"cloudStoregeDemo/pkg/e"
 	"cloudStoregeDemo/service/file_service"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"mime/multipart"
 	"net/http"
+	"path"
 	"strconv"
 )
 
@@ -16,7 +20,6 @@ type File struct {
 	ParentDictId int    `json:"parent_dict_id"`
 	FileName     string `json:"file_name"`
 	EncryptedKey string `json:"encrypted_key"`
-	FileContent  string `json:"file_content"`
 
 	FileType string `json:"file_type"`
 	FileSize int    `json:"file_size"`
@@ -24,23 +27,42 @@ type File struct {
 	PageSize int    `json:"page_size"`
 }
 
+type FileForm struct {
+	UploadFile   *multipart.FileHeader `form:"upload_file"`
+	ParentDictId int                   `form:"parent_dict_id"`
+	FileName     string                `form:"file_name"`
+	EncryptedKey string                `form:"encrypted_key"`
+	FileType     string                `form:"file_type"`
+	FileSize     int                   `form:"file_size"`
+}
+
 func AddFile(c *gin.Context) {
 	var appG = app.Gin{C: c}
-	var file = &File{}
-	//var err error
+	var file = &FileForm{}
+	var err error
 	httpcode, errorcode := app.BindAndValid(c, file)
 	if errorcode != e.SUCCESS {
 		appG.Respond(httpcode, errorcode, nil)
 		return
 	}
 
+	fmt.Println(file)
+
 	fileService := file_service.File{
 		ParentDictId: file.ParentDictId,
-		FileName:     file.FileName,
 		EncryptedKey: file.EncryptedKey,
-		FileContent:  file.FileContent,
 		FileType:     file.FileType,
 		FileSize:     file.FileSize,
+	}
+	if file.FileType == "-" {
+		fileService.FileName = file.UploadFile.Filename
+		err = appG.C.SaveUploadedFile(file.UploadFile, constant.FILE_SAVE_ROOT+file.UploadFile.Filename)
+		if err != nil {
+			appG.Respond(http.StatusOK, e.ERROR, nil)
+			return
+		}
+	} else {
+		fileService.FileName = file.FileName
 	}
 
 	id, err := fileService.Add()
@@ -48,9 +70,17 @@ func AddFile(c *gin.Context) {
 		appG.Respond(http.StatusOK, e.ERROR, err.Error())
 		return
 	}
+	if file.FileType == "-" {
+		err = appG.C.SaveUploadedFile(file.UploadFile, constant.FILE_SAVE_ROOT+file.UploadFile.Filename)
+		if err != nil {
+			appG.Respond(http.StatusOK, e.ERROR, nil)
+			return
+		}
+	}
 	appG.Respond(http.StatusOK, e.SUCCESS, map[string]interface{}{
 		"id": id,
 	})
+
 }
 
 func GetFiles(c *gin.Context) {
@@ -62,9 +92,11 @@ func GetFiles(c *gin.Context) {
 		appG.Respond(httpcode, errorcode, nil)
 		return
 	}
-
+	userId, _ := appG.C.Get("userId")
+	u, _ := strconv.Atoi(userId.(string))
 	fileService := file_service.File{
 		ID:       file.ID,
+		UserId:   u,
 		PageNum:  (file.PageNum - 1) * file.PageSize,
 		PageSize: file.PageSize,
 	}
@@ -94,19 +126,48 @@ func GetFile(c *gin.Context) {
 		appG.Respond(http.StatusOK, e.INVALID_PARAMS, nil)
 		return
 	}
+	userId, _ := appG.C.Get("userId")
+	u, _ := strconv.Atoi(userId.(string))
 	fileService := file_service.File{
-		ID: id,
+		ID:     id,
+		UserId: u,
 	}
-	f, content, err := fileService.Get()
+	f, err := fileService.Get()
 	if err != nil {
 		appG.Respond(http.StatusOK, e.ERROR, err.Error())
 		return
 	}
+	fmt.Println(f.FileName)
+	var HttpContentType = map[string]string{
+		".avi":  "video/avi",
+		".mp3":  "   audio/mp3",
+		".mp4":  "video/mp4",
+		".wmv":  "   video/x-ms-wmv",
+		".asf":  "video/x-ms-asf",
+		".rm":   "application/vnd.rn-realmedia",
+		".rmvb": "application/vnd.rn-realmedia-vbr",
+		".mov":  "video/quicktime",
+		".m4v":  "video/mp4",
+		".flv":  "video/x-flv",
+		".jpg":  "image/jpeg",
+		".png":  "image/png",
+		".pdf":  "application/pdf",
+		".docx": "application/msword",
+		".doc":  "application/msword",
+	}
+	filePath := constant.FILE_SAVE_ROOT + f.FileName
+	//获取文件名称带后缀
+	fileNameWithSuffix := path.Base(filePath)
+	//获取文件的后缀
+	fileType := path.Ext(fileNameWithSuffix)
+	//获取文件类型对应的http ContentType 类型
+	fileContentType := HttpContentType[fileType]
+	if fileContentType == "" {
+		fileContentType = "application/octet-stream"
+	}
+	c.Header("Content-Type", fileContentType)
+	c.File(filePath)
 
-	appG.Respond(http.StatusOK, e.SUCCESS, map[string]interface{}{
-		"file_msg":     f,
-		"file_content": content,
-	})
 }
 
 func UpdateFile(c *gin.Context) {

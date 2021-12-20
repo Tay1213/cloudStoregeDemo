@@ -2,7 +2,12 @@ package user_service
 
 import (
 	"cloudStoregeDemo/models"
+	"cloudStoregeDemo/pkg/constant"
+	"cloudStoregeDemo/pkg/gredis"
 	"errors"
+	"github.com/dgrijalva/jwt-go"
+	"strconv"
+	"time"
 )
 
 type User struct {
@@ -14,25 +19,37 @@ type User struct {
 	HashedAuthenticationKey string
 }
 
-func (u *User) Login() (bool, error) {
+func (u *User) Login() (bool, string, error) {
 
 	success, err := models.Validate(map[string]interface{}{
 		"Username":                u.Username,
 		"Email":                   u.Email,
 		"HashedAuthenticationKey": u.HashedAuthenticationKey,
 	})
+	if err != nil || !success {
+		return false, "", err
+	}
+	user, err := models.Login(map[string]interface{}{
+		"HashedAuthenticationKey": u.HashedAuthenticationKey,
+	})
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
-	if success {
-		err := models.Login(map[string]interface{}{
-			"HashedAuthenticationKey": u.HashedAuthenticationKey,
-		})
-		if err != nil {
-			return true, err
-		}
+
+	flag, _ := gredis.Get(constant.LOGIN_PRIFIX + ":" + strconv.Itoa(user.Id))
+	if flag != nil {
+		return false, "", errors.New("你已经登录过了")
 	}
-	return success, nil
+
+	token, err := getJwt(user)
+	if err != nil {
+		return false, "", errors.New("获取token失败")
+	}
+	err = gredis.Set(constant.LOGIN_PRIFIX+":"+strconv.Itoa(user.Id), 1, 30*60)
+	if err != nil {
+		return false, "", errors.New("设置redis出错")
+	}
+	return success, token, nil
 }
 
 func (u *User) GetUserByName() (*models.User, error) {
@@ -77,4 +94,28 @@ func (u *User) Update() error {
 
 func (u *User) Delete() error {
 	return models.DeleteUser(u.ID)
+}
+
+func getJwt(user *models.User) (string, error) {
+	id := strconv.Itoa(user.Id)
+	claims := jwt.StandardClaims{
+		Audience:  user.Username,                                         // 受众
+		ExpiresAt: time.Now().Unix() + (int64(constant.JWT_EXPIRE_TIME)), // 失效时间
+		Id:        id,                                                    // 编号
+		IssuedAt:  time.Now().Unix(),                                     // 签发时间
+		Issuer:    "cloud_storage",                                       // 签发人
+		NotBefore: time.Now().Unix(),                                     // 生效时间
+		Subject:   "login",                                               // 主题
+	}
+	var jwtSecret = []byte(constant.JWT_SECRET)
+	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token, err := tokenClaims.SignedString(jwtSecret)
+	if err != nil {
+		return "", err
+	}
+	err = gredis.Set(constant.TOKEN_PRIFIX+":"+id+":"+token, "token", constant.EXPIRE_TIME)
+	if err != nil {
+		return "", err
+	}
+	return token, nil
 }

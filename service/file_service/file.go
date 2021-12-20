@@ -1,14 +1,16 @@
 package file_service
 
-import "cloudStoregeDemo/models"
+import (
+	"cloudStoregeDemo/models"
+)
 
 type File struct {
 	models.Model
 	ID           int
+	UserId       int
 	ParentDictId int
 	FileName     string
 	EncryptedKey string
-	FileContent  string
 	FileType     string
 	FileSize     int
 
@@ -21,18 +23,29 @@ func (f *File) Add() (int, error) {
 		"ParentDictId": f.ParentDictId,
 		"FileName":     f.FileName,
 		"EncryptedKey": f.EncryptedKey,
-		"FileContent":  f.FileContent,
 		"FileType":     f.FileType,
 		"FileSize":     f.FileSize,
 	})
+
+	//if f.FileType == "-" {
+	//	fileUrl := constant.FILE_SAVE_ROOT + strconv.Itoa(id) + "-" + f.FileContent.Filename
+	//	f, err := os.Create(fileUrl)
+	//	if err != nil {
+	//		return 0, errors.New("文件创建失败")
+	//	}
+	//	_, err = f.WriteString(m["FileContent"].(string))
+	//	if err != nil {
+	//		return 0, errors.New("文件写入失败")
+	//	}
+	//}
 }
 
-func (f *File) Get() (*models.FileSystem, string, error) {
-	return models.GetFile(f.ID)
+func (f *File) Get() (*models.FileSystem, error) {
+	return models.GetFile(f.ID, f.UserId)
 }
 
 func (f *File) GetAll() ([]*models.FileSystem, error) {
-	return models.GetFiles(f.ID, f.PageSize, f.PageNum)
+	return models.GetFiles(f.ID, f.UserId, f.PageSize, f.PageNum)
 }
 
 func (f *File) Count() (int, error) {

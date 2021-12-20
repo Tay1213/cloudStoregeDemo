@@ -22,3 +22,14 @@ func (g *Gin) Respond(httpCode, code int, data interface{}) {
 		Msg:  e.GetMsg(code),
 	})
 }
+
+func (g *Gin) RespondMsg(httpCode, code int, msg string, data interface{}) {
+	if msg == "" {
+		msg = e.GetMsg(code)
+	}
+	g.C.JSON(httpCode, ResultData{
+		Code: code,
+		Data: data,
+		Msg:  msg,
+	})
+}
