@@ -47,9 +47,11 @@ func AddFile(c *gin.Context) {
 	}
 
 	fmt.Println(file)
-
+	userId, _ := appG.C.Get("userId")
+	u, _ := strconv.Atoi(userId.(string))
 	fileService := file_service.File{
 		ParentDictId: file.ParentDictId,
+		UserId:       u,
 		EncryptedKey: file.EncryptedKey,
 		FileType:     file.FileType,
 		FileSize:     file.FileSize,

@@ -37,6 +37,7 @@ func AddFile(m map[string]interface{}) (int, error) {
 	file := FileSystem{
 		ParentDictId: m["ParentDictId"].(int),
 		FileName:     m["FileName"].(string),
+		UserId:       m["UserId"].(int),
 		EncryptedKey: m["EncryptedKey"].(string),
 		Ctime:        time.Now(),
 		FileType:     m["FileType"].(string),

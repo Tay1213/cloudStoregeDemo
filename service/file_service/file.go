@@ -22,6 +22,7 @@ func (f *File) Add() (int, error) {
 	return models.AddFile(map[string]interface{}{
 		"ParentDictId": f.ParentDictId,
 		"FileName":     f.FileName,
+		"UserId":       f.UserId,
 		"EncryptedKey": f.EncryptedKey,
 		"FileType":     f.FileType,
 		"FileSize":     f.FileSize,
