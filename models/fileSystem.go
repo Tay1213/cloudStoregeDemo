@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"time"
 )
 
@@ -23,14 +22,14 @@ func (FileSystem) TableName() string {
 	return "file_system"
 }
 
-func GetRootFileId(username string) {
+func GetParentFileId(id int) (int, error) {
 	var err error
-	var rootId int
-	err = db.Select("root_dict_id").Where("username = ?", username).Find(&rootId).Error
+	var file = FileSystem{}
+	err = db.Select("parent_dict_id").Where("id = ?", id).Find(&file).Error
 	if err != nil {
-		fmt.Printf("查询错误: %#v", err)
+		return 0, errors.New("查询失败")
 	}
-	fmt.Println(rootId)
+	return file.ParentDictId, nil
 }
 
 func AddFile(m map[string]interface{}) (int, error) {

@@ -38,16 +38,24 @@ func (u *User) Login() (bool, string, error) {
 
 	flag, _ := gredis.Get(constant.LOGIN_PRIFIX + ":" + strconv.Itoa(user.Id))
 	if flag != nil {
-		return false, "", errors.New("你已经登录过了")
+		times := flag[0] - 48
+		if times >= 5 {
+			return false, "", errors.New("登录次数过多")
+		} else {
+			err = gredis.Set(constant.LOGIN_PRIFIX+":"+strconv.Itoa(user.Id), times+1, 30)
+			if err != nil {
+				return false, "", errors.New("设置redis出错")
+			}
+		}
+	} else {
+		err = gredis.Set(constant.LOGIN_PRIFIX+":"+strconv.Itoa(user.Id), 1, 30)
+		if err != nil {
+			return false, "", errors.New("设置redis出错")
+		}
 	}
-
 	token, err := getJwt(user)
 	if err != nil {
 		return false, "", errors.New("获取token失败")
-	}
-	err = gredis.Set(constant.LOGIN_PRIFIX+":"+strconv.Itoa(user.Id), 1, 30*60)
-	if err != nil {
-		return false, "", errors.New("设置redis出错")
 	}
 	return success, token, nil
 }

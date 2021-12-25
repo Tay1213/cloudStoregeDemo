@@ -56,6 +56,7 @@ func Login(c *gin.Context) {
 
 	fileService := file_service.File{
 		ID:       u.RootDictId,
+		UserId:   u.Id,
 		PageNum:  0,
 		PageSize: 10,
 	}

@@ -114,9 +114,15 @@ func GetFiles(c *gin.Context) {
 		appG.Respond(http.StatusOK, e.ERROR, err.Error())
 		return
 	}
+	parentId, err := fileService.GetParentId()
+	if err != nil {
+		appG.Respond(http.StatusOK, e.ERROR, err.Error())
+		return
+	}
 	m := make(map[string]interface{})
 	m["total"] = count
 	m["files"] = files
+	m["parent_dict_id"] = parentId
 
 	appG.Respond(http.StatusOK, e.SUCCESS, m)
 }
@@ -142,9 +148,9 @@ func GetFile(c *gin.Context) {
 	fmt.Println(f.FileName)
 	var HttpContentType = map[string]string{
 		".avi":  "video/avi",
-		".mp3":  "   audio/mp3",
+		".mp3":  "audio/mp3",
 		".mp4":  "video/mp4",
-		".wmv":  "   video/x-ms-wmv",
+		".wmv":  "video/x-ms-wmv",
 		".asf":  "video/x-ms-asf",
 		".rm":   "application/vnd.rn-realmedia",
 		".rmvb": "application/vnd.rn-realmedia-vbr",

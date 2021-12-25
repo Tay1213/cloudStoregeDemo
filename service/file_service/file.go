@@ -49,6 +49,10 @@ func (f *File) GetAll() ([]*models.FileSystem, error) {
 	return models.GetFiles(f.ID, f.UserId, f.PageSize, f.PageNum)
 }
 
+func (f *File) GetParentId() (int, error) {
+	return models.GetParentFileId(f.ID)
+}
+
 func (f *File) Count() (int, error) {
 	return models.GetFilesNum(f.ID)
 }
