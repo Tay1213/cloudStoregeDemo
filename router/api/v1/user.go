@@ -207,7 +207,7 @@ func UpdateUser(c *gin.Context) {
 
 // @Summary DeleteUser
 // @Produce  json
-// @Param user body string false "username, email, hashedAuthenticationKey"
+// @Param  user body string false "username, email, hashedAuthenticationKey"
 // @Success   200 {object} app.ResultData
 // @Failure 500 {object} app.ResultData
 // @Router /user/delete [delete]
