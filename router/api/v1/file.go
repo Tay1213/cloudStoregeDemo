@@ -36,6 +36,12 @@ type FileForm struct {
 	FileSize     int                   `form:"file_size"`
 }
 
+// @Summary addfile
+// @Produce  json
+// @Param user body string false "username, email, hashedAuthenticationKey"
+// @Success 200 {object} app.ResultData
+// @Failure 500 {object} app.ResultData
+// @Router /file/add [post]
 func AddFile(c *gin.Context) {
 	var appG = app.Gin{C: c}
 	var file = &FileForm{}
@@ -85,6 +91,12 @@ func AddFile(c *gin.Context) {
 
 }
 
+// @Summary getfiles
+// @Produce  json
+// @Param user body string false "username, email, hashedAuthenticationKey"
+// @Success 200 {object} app.ResultData
+// @Failure 500 {object} app.ResultData
+// @Router /file/getAll [post]
 func GetFiles(c *gin.Context) {
 	var appG = app.Gin{C: c}
 	var file = &File{}
@@ -127,6 +139,12 @@ func GetFiles(c *gin.Context) {
 	appG.Respond(http.StatusOK, e.SUCCESS, m)
 }
 
+// @Summary getfile
+// @Produce  json
+// @Param user body string false "username, email, hashedAuthenticationKey"
+// @Success 200 {object} app.ResultData
+// @Failure 500 {object} app.ResultData
+// @Router /file/get [get]
 func GetFile(c *gin.Context) {
 	var appG = app.Gin{C: c}
 	id, err := strconv.Atoi(appG.C.Param("id"))
@@ -178,6 +196,12 @@ func GetFile(c *gin.Context) {
 
 }
 
+// @Summary updatefile
+// @Produce  json
+// @Param user body string false "username, email, hashedAuthenticationKey"
+// @Success 200 {object} app.ResultData
+// @Failure 500 {object} app.ResultData
+// @Router /file/update [post]
 func UpdateFile(c *gin.Context) {
 	var appG = app.Gin{C: c}
 	var file = &File{}
@@ -203,6 +227,12 @@ func UpdateFile(c *gin.Context) {
 	appG.Respond(http.StatusOK, e.SUCCESS, nil)
 }
 
+// @Summary deletefile
+// @Produce  json
+// @Param user body string false "username, email, hashedAuthenticationKey"
+// @Success 200 {object} app.ResultData
+// @Failure 500 {object} app.ResultData
+// @Router /file/delete [delete]
 func DeleteFile(c *gin.Context) {
 	var appG = app.Gin{C: c}
 	id, err := strconv.Atoi(appG.C.Param("id"))

@@ -23,12 +23,364 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/file/add": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "addfile",
+                "parameters": [
+                    {
+                        "description": "username, email, hashedAuthenticationKey",
+                        "name": "user",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/delete": {
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "deletefile",
+                "parameters": [
+                    {
+                        "description": "username, email, hashedAuthenticationKey",
+                        "name": "user",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/get": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "getfile",
+                "parameters": [
+                    {
+                        "description": "username, email, hashedAuthenticationKey",
+                        "name": "user",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/getAll": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "getfiles",
+                "parameters": [
+                    {
+                        "description": "username, email, hashedAuthenticationKey",
+                        "name": "user",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/update": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "updatefile",
+                "parameters": [
+                    {
+                        "description": "username, email, hashedAuthenticationKey",
+                        "name": "user",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/delete": {
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "DeleteUser",
+                "parameters": [
+                    {
+                        "description": "username, email, hashedAuthenticationKey",
+                        "name": "user",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/email": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "GetUserByEmail",
+                "parameters": [
+                    {
+                        "description": "username, email, hashedAuthenticationKey",
+                        "name": "user",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    }
+                }
+            }
+        },
         "/user/login": {
             "post": {
                 "produces": [
                     "application/json"
                 ],
                 "summary": "login",
+                "parameters": [
+                    {
+                        "description": "username, email, hashedAuthenticationKey",
+                        "name": "user",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/logout": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "logout",
+                "parameters": [
+                    {
+                        "description": "username, email, hashedAuthenticationKey",
+                        "name": "user",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/name": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "GetUserByName",
+                "parameters": [
+                    {
+                        "description": "username, email, hashedAuthenticationKey",
+                        "name": "user",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/reg": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "register",
+                "parameters": [
+                    {
+                        "description": "username, email, hashedAuthenticationKey",
+                        "name": "user",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.ResultData"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/update": {
+            "put": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "UpdateUser",
                 "parameters": [
                     {
                         "description": "username, email, hashedAuthenticationKey",

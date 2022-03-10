@@ -78,11 +78,23 @@ func Login(c *gin.Context) {
 	})
 }
 
+// @Summary logout
+// @Produce  json
+// @Param user body string false "username, email, hashedAuthenticationKey"
+// @Success 200 {object} app.ResultData
+// @Failure 500 {object} app.ResultData
+// @Router /user/logout [post]
 func Logout(c *gin.Context) {
 	appG := app.Gin{C: c}
 	appG.Respond(http.StatusOK, e.SUCCESS, nil)
 }
 
+// @Summary GetUserByName
+// @Produce  json
+// @Param user body string false "username, email, hashedAuthenticationKey"
+// @Success 200 {object} app.ResultData
+// @Failure 500 {object} app.ResultData
+// @Router /user/name [get]
 func GetUserByName(c *gin.Context) {
 	var appG = app.Gin{C: c}
 	name := appG.C.Param("name")
@@ -105,6 +117,12 @@ func GetUserByName(c *gin.Context) {
 	})
 }
 
+// @Summary GetUserByEmail
+// @Produce  json
+// @Param user body string false "username, email, hashedAuthenticationKey"
+// @Success 200 {object} app.ResultData
+// @Failure 500 {object} app.ResultData
+// @Router /user/email [get]
 func GetUserByEmail(c *gin.Context) {
 	var appG = app.Gin{C: c}
 	email := appG.C.Param("email")
@@ -126,6 +144,12 @@ func GetUserByEmail(c *gin.Context) {
 	})
 }
 
+// @Summary register
+// @Produce  json
+// @Param user body string false "username, email, hashedAuthenticationKey"
+// @Success 200 {object} app.ResultData
+// @Failure 500 {object} app.ResultData
+// @Router /user/reg [post]
 func Reg(c *gin.Context) {
 	var appG = app.Gin{C: c}
 	var user = &User{}
@@ -153,6 +177,12 @@ func Reg(c *gin.Context) {
 
 }
 
+// @Summary UpdateUser
+// @Produce  json
+// @Param user body string false "username, email, hashedAuthenticationKey"
+// @Success 200 {object} app.ResultData
+// @Failure 500 {object} app.ResultData
+// @Router /user/update [put]
 func UpdateUser(c *gin.Context) {
 	var appG = app.Gin{C: c}
 	var user = &User{}
@@ -175,6 +205,12 @@ func UpdateUser(c *gin.Context) {
 	appG.Respond(http.StatusOK, e.SUCCESS, nil)
 }
 
+// @Summary DeleteUser
+// @Produce  json
+// @Param user body string false "username, email, hashedAuthenticationKey"
+// @Success   200 {object} app.ResultData
+// @Failure 500 {object} app.ResultData
+// @Router /user/delete [delete]
 func DeleteUser(c *gin.Context) {
 	var appG = app.Gin{C: c}
 	var err error

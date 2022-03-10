@@ -10,6 +10,146 @@ definitions:
 info:
   contact: {}
 paths:
+  /file/add:
+    post:
+      parameters:
+      - description: username, email, hashedAuthenticationKey
+        in: body
+        name: user
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.ResultData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.ResultData'
+      summary: addfile
+  /file/delete:
+    delete:
+      parameters:
+      - description: username, email, hashedAuthenticationKey
+        in: body
+        name: user
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.ResultData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.ResultData'
+      summary: deletefile
+  /file/get:
+    get:
+      parameters:
+      - description: username, email, hashedAuthenticationKey
+        in: body
+        name: user
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.ResultData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.ResultData'
+      summary: getfile
+  /file/getAll:
+    post:
+      parameters:
+      - description: username, email, hashedAuthenticationKey
+        in: body
+        name: user
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.ResultData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.ResultData'
+      summary: getfiles
+  /file/update:
+    post:
+      parameters:
+      - description: username, email, hashedAuthenticationKey
+        in: body
+        name: user
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.ResultData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.ResultData'
+      summary: updatefile
+  /user/delete:
+    delete:
+      parameters:
+      - description: username, email, hashedAuthenticationKey
+        in: body
+        name: user
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.ResultData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.ResultData'
+      summary: DeleteUser
+  /user/email:
+    get:
+      parameters:
+      - description: username, email, hashedAuthenticationKey
+        in: body
+        name: user
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.ResultData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.ResultData'
+      summary: GetUserByEmail
   /user/login:
     post:
       parameters:
@@ -30,4 +170,84 @@ paths:
           schema:
             $ref: '#/definitions/app.ResultData'
       summary: login
+  /user/logout:
+    post:
+      parameters:
+      - description: username, email, hashedAuthenticationKey
+        in: body
+        name: user
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.ResultData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.ResultData'
+      summary: logout
+  /user/name:
+    get:
+      parameters:
+      - description: username, email, hashedAuthenticationKey
+        in: body
+        name: user
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.ResultData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.ResultData'
+      summary: GetUserByName
+  /user/reg:
+    post:
+      parameters:
+      - description: username, email, hashedAuthenticationKey
+        in: body
+        name: user
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.ResultData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.ResultData'
+      summary: register
+  /user/update:
+    put:
+      parameters:
+      - description: username, email, hashedAuthenticationKey
+        in: body
+        name: user
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.ResultData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.ResultData'
+      summary: UpdateUser
 swagger: "2.0"
